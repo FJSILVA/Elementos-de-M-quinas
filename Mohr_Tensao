@@ -1,0 +1,98 @@
+% Círculo de Mohr de tensões 2D
+% Algoritmo criado por Francisco Jaime da Silva
+% Baseado nas equações de HIBELLER, R.C, Resistência dos Materiais. Pearson Prentice Hall, 5ª Edição, São Paulo, 2004. 
+
+clc; clear all; close all;
+% Dados de entrada
+sigmax=45;
+sigmay=-60;
+tauxy=30;
+theta=(0);
+
+%--------------------------------------------------------------------------
+sigmamed=(sigmax+sigmay)/2
+raio=sqrt(((sigmax-sigmay)/2)^2+(tauxy)^2)
+
+
+%--------------------------------------------------------------------------
+% Tensões principais
+sigma1=sigmamed+raio % Tensão máxima
+sigma2=sigmamed-raio % Tensão mínima
+thetap=(1/2)*atand((2*tauxy)/(sigmax-sigmay))           % Ângulo das tensões principais
+taumax=(sigma1-sigma2)/2
+thetas=(1/2)*atand(-((sigmax-sigmay)/(2*tauxy)))                 % ângulo do cisalhamento máximo
+%--------------------------------------------------------------------------
+% Elemento rotacionado
+
+if theta ~= 0
+       sigmax_linha=sigmamed+((sigmax-sigmay)/2)*cosd(2*theta)+tauxy*sind(2*theta)
+       sigmay_linha=sigmamed-((sigmax-sigmay)/2)*cosd(2*theta)-tauxy*sind(2*theta)
+       tauxy_linha= -((sigmax-sigmay)/2)*sind(2*theta)+(tauxy*cosd(2*theta))
+end
+
+%--------------------------------------------------------------------------
+% Gráfico
+centro=sigmamed;
+
+circulo=circle([sigmamed,0],raio,100,'-k');
+hold on
+plot([sigmax,sigmay],[-tauxy,tauxy],'-k')
+plot(centro,0,'ko','MarkerFaceColor','k')   % Center
+plot(sigmax,-tauxy,'ko','MarkerFaceColor','k') %A
+plot(sigmay,tauxy,'ko','MarkerFaceColor','k') %B
+plot(centro,raio,'ko','MarkerFaceColor','k')   % Tau_max
+plot(centro,-raio,'ko','MarkerFaceColor','k')  % Tau_max (negative)
+plot(centro+raio, 0, 'ko','MarkerFaceColor','k')   % sigma_1
+plot(centro-raio, 0, 'ko','MarkerFaceColor','k')	% sigma_2
+
+% Plot options
+axis equal
+set(circulo,'Color','k','LineWidth',2)
+ylim([-1.25*raio, 1.25*raio])
+xlim([centro-1.25*raio, centro+1.25*raio])
+plot([centro-1.25*raio, centro+1.25*raio],[0, 0],'k-') % line through 0 tau
+
+% Annotate graph
+text(sigmax+raio/12,-tauxy,sprintf('A (%d, %d)',sigmax,-tauxy),...
+     'HorizontalAlignment','left','FontSize',16)
+text(sigmay-raio/12,tauxy,sprintf('B (%d, %d)',sigmay,tauxy),...
+     'HorizontalAlignment','right','FontSize',16)
+text(centro,1.1*raio,'\tau_{max}',...
+     'HorizontalAlignment','center','FontSize',18)
+text(centro,-1.1*raio,'\tau_{max}',...
+     'HorizontalAlignment','center','FontSize',18)
+text(centro+1.1*raio,raio/12,'\sigma_{1}',...
+     'HorizontalAlignment','center','FontSize',18)
+text(centro-1.1*raio,raio/12,'\sigma_{2}',...
+     'HorizontalAlignment','center','FontSize',18)
+
+% More plot options
+set(gca,'LineWidth',2,'FontSize',24,'FontWeight','normal','FontName','Times')
+set(get(gca,'XLabel'),'String','\sigma (MPa)','FontSize',24,'FontWeight','bold','FontName','Times')
+set(get(gca,'YLabel'),'String','\tau (MPa)','FontSize',24,'FontWeight','bold','FontName','Times')
+scrsize = get(0,'ScreenSize');
+set(gcf,'Position',scrsize)
+set(gcf,'Position',[1 1 1000 1000])
+hold off
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
